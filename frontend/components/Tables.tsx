@@ -15,6 +15,7 @@ type TableProps = {
 export default function Table({
   entity,
   onSelect,
+  fields,
   refreshKey,
   lang
 }: TableProps) {
@@ -22,22 +23,30 @@ export default function Table({
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any>(null);
 
-  const token = localStorage.getItem("token");
-    const { t } = useLang();
+  const { t } = useLang();
 
+  // ✅ SSR-safe token
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
+
+  // ================= FETCH =================
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${entity}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/${entity}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
+      );
 
       const newData = await res.json();
-     
 
-      // 🔥 ensure new reference
+      // ✅ ensure new reference (important for re-render)
       setData(Array.isArray(newData) ? [...newData] : []);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -48,39 +57,48 @@ export default function Table({
   };
 
   useEffect(() => {
-    let active = true;
+    fetchData();
+  }, [entity, refreshKey]); // keep clean + stable
 
-    (async () => {
-      if (!active) return;
-      await fetchData();
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [entity,refreshKey]);
-  const fields=localStorage.getItem("appConfig") ? JSON.parse(localStorage.getItem("appConfig") || "{}").entities?.[entity]?.fields || {} : {};
+  // ================= COLUMNS =================
   const columns = Object.keys(fields || {});
 
-  
-
+  // ================= UI =================
   if (loading) return <p style={{ marginTop: 10 }}>Loading...</p>;
 
   return (
     <div style={container}>
-      <h2 style={title}>{entity} </h2>
+      <h2 style={title}>{entity}</h2>
 
-    <p style={{ marginBottom: 15, color: "#666", fontSize: "14px" }}>*click each fields for edit or delete </p>
+      <p
+        style={{
+          marginBottom: 15,
+          color: "#666",
+          fontSize: "14px"
+        }}
+      >
+        *click each row to edit or delete
+      </p>
 
       <div style={tableWrapper}>
         <table style={table}>
           <thead style={thead}>
             <tr>
-              {columns.map((col) => (
-                <th key={col} style={th}>
-                  {fields[col]?.label || col}
-                </th>
-              ))}
+              {columns.map((col) => {
+                const label = fields[col]?.label;
+
+                // ✅ multilingual safe label
+                const labelText =
+                  typeof label === "object"
+                    ? label?.[lang!] || label?.en || col
+                    : label || col;
+
+                return (
+                  <th key={col} style={th}>
+                    {labelText}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
 
@@ -88,7 +106,7 @@ export default function Table({
             {data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} style={empty}>
-                 {t.noData}
+                  {t.noData}
                 </td>
               </tr>
             ) : (
@@ -98,7 +116,9 @@ export default function Table({
                   style={{
                     ...tr,
                     background:
-                      selected?.id === item.id ? "#eef2ff" : "white"
+                      selected?.id === item.id
+                        ? "#eef2ff"
+                        : "white"
                   }}
                   onClick={() => {
                     setSelected(item);
@@ -109,7 +129,9 @@ export default function Table({
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.background =
-                      selected?.id === item.id ? "#eef2ff" : "white")
+                      selected?.id === item.id
+                        ? "#eef2ff"
+                        : "white")
                   }
                 >
                   {columns.map((col) => (
@@ -128,7 +150,7 @@ export default function Table({
 }
 
 //
-// 🎨 STYLES (unchanged)
+// 🎨 STYLES (UNCHANGED)
 //
 
 const container = { marginTop: "20px" };
