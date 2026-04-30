@@ -9,7 +9,7 @@ export default function DashboardView({ entity, stats = [] }: any) {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:4000/${entity}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/${entity}`, {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`

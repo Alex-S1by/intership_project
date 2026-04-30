@@ -28,7 +28,7 @@ export default function Table({
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:4000/${entity}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${entity}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

@@ -6,7 +6,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://intership-project-rho.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 
 const pool = require("./db");

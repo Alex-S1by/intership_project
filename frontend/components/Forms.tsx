@@ -38,8 +38,8 @@ export default function Form({
 
   const submit = async () => {
     const url = isEdit
-      ? `http://localhost:4000/${entity}/${selected.id}`
-      : `http://localhost:4000/${entity}`;
+      ? `${process.env.NEXT_PUBLIC_API_URL}/${entity}/${selected.id}`
+      : `${process.env.NEXT_PUBLIC_API_URL}/${entity}`;
 
     const method = isEdit ? "PUT" : "POST";
 
@@ -60,7 +60,7 @@ export default function Form({
   const handleDelete = async () => {
     if (!selected?.id) return;
 
-    await fetch(`http://localhost:4000/${entity}/${selected.id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${entity}/${selected.id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`
