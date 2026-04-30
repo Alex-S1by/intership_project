@@ -1,0 +1,74 @@
+{
+  "appName": "Dynamic App Builder",
+
+  "entities": {
+    "tasks": {
+      "fields": {
+        "title": {
+          "type": "text",
+          "label": "Task Title"
+        },
+        "description": {
+          "type": "text",
+          "label": "Description"
+        },
+        "priority": {
+          "type": "number",
+          "label": "Priority"
+        }
+      }
+    },
+
+    "users": {
+      "fields": {
+        "name": {
+          "type": "text",
+          "label": "Name"
+        },
+        "email": {
+          "type": "email",
+          "label": "Email"
+        }
+      }
+    }
+  },
+
+  "ui": {
+    "pages": [
+      {
+        "type": "dashboard",
+        "entity": "tasks",
+        "stats": [
+          { "type": "count", "label": "Total Tasks" },
+          { "type": "field_count", "label": "Fields Count" }
+        ]
+      },
+
+      {
+        "type": "form",
+        "entity": "tasks"
+      },
+      {
+        "type": "table",
+        "entity": "tasks"
+      },
+
+      {
+        "type": "dashboard",
+        "entity": "users",
+        "stats": [
+          { "type": "count", "label": "Total Users" }
+        ]
+      },
+
+      {
+        "type": "form",
+        "entity": "users"
+      },
+      {
+        "type": "table",
+        "entity": "users"
+      }
+    ]
+  }
+}
