@@ -85,14 +85,32 @@ export default function Form({
   // ================= FIELD EDIT =================
 
   const saveFields = () => {
-    const config = JSON.parse(localStorage.getItem("appConfig") || "{}");
+  try {
+    const raw = localStorage.getItem("appConfig");
+
+    if (!raw) {
+      alert("No config found");
+      return;
+    }
+
+    const config = JSON.parse(raw);
+
+    // 🔥 ensure structure exists
+    if (!config.entities) config.entities = {};
+    if (!config.entities[entity]) config.entities[entity] = {};
+
     config.entities[entity].fields = localFields;
+
     localStorage.setItem("appConfig", JSON.stringify(config));
 
     alert("Fields updated!");
-    onRefresh?.();
-  };
 
+    onRefresh?.();
+  } catch (err) {
+    console.error("Save fields error:", err);
+    alert("Failed to save fields");
+  }
+};
   return (
     <div style={container}>
       <h2 style={title}>
