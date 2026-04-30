@@ -153,11 +153,21 @@ export default function Home() {
           };
 
           const refresh = () => {
-            setRefreshMap((prev) => ({
-              ...prev,
-              [entity]: (prev[entity] || 0) + 1,
-            }));
-          };
+  const stored = localStorage.getItem("appConfig");
+
+  if (stored) {
+    try {
+      setConfig(JSON.parse(stored)); // 🔥 CRITICAL FIX
+    } catch (err) {
+      console.error("Invalid config", err);
+    }
+  }
+
+  setRefreshMap((prev) => ({
+    ...prev,
+    [entity]: (prev[entity] || 0) + 1
+  }));
+};
 
           return (
             <div key={entity} style={{ marginBottom: "40px" }}>
