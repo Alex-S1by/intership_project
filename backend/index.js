@@ -8,6 +8,8 @@ const jwt = require("jsonwebtoken");
 const app = express();
 app.use(cors({
   origin: "https://intership-project-rho.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 app.use(express.json());

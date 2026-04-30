@@ -70,6 +70,8 @@ export default function Table({
     <div style={container}>
       <h2 style={title}>{entity} </h2>
 
+    <p style={{ marginBottom: 15, color: "#666", fontSize: "14px" }}>*click each fields for edit and delete </p>
+
       <div style={tableWrapper}>
         <table style={table}>
           <thead style={thead}>

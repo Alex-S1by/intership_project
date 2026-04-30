@@ -37,6 +37,16 @@ export default function Form({
   // ================= CRUD =================
 
   const submit = async () => {
+
+     const hasInvalid = Object.keys(localFields).some((field) => {
+    const value = formData[field];
+    return !value || value.trim() === "";
+  });
+
+  if (hasInvalid) {
+    alert("Please fill all fields properly"); // simple, no custom UI
+    return;
+  }
     const url = isEdit
       ? `${process.env.NEXT_PUBLIC_API_URL}/${entity}/${selected.id}`
       : `${process.env.NEXT_PUBLIC_API_URL}/${entity}`;
