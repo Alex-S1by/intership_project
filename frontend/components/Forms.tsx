@@ -28,11 +28,15 @@ export default function Form({
   const { t } = useLang();
 
   useEffect(() => {
+  if (fields && typeof fields === "object") {
     setLocalFields(fields);
+  } else {
+    setLocalFields({});
+  }
 
-    if (selected) setFormData(selected);
-    else setFormData({});
-  }, [selected, fields, lang]); 
+  if (selected) setFormData(selected);
+  else setFormData({});
+}, [selected, fields, lang]);
 
   // ================= CRUD =================
 
@@ -121,7 +125,7 @@ export default function Form({
       <div style={card}>
         <h3 style={subtitle}>{t.manageFields}</h3>
 
-        {Object.entries(localFields).map(([key, fieldConfig]: any) => (
+        {Object.entries(localFields || {}).map(([key, fieldConfig]: any) => (
           <div key={key} style={row}>
             <input
               value={
