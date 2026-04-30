@@ -15,6 +15,12 @@ export default function Home() {
   }, []);
 
   const handleLoad = () => {
+
+    if(!isLoggedIn) {
+      alert("Please login to load config");
+      router.push("/login");
+      return;
+    }
     try {
       const parsed = JSON.parse(jsonInput);
       localStorage.setItem("appConfig", JSON.stringify(parsed));
